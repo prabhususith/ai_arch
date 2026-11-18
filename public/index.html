@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentFlow Studio | Principal AI-Native Architecture</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo-icon">⚡</div>
+      <div class="brand-text">
+        <h1>AgentFlow <span>Studio</span></h1>
+        <p class="subtitle">Multi-Agent ReAct Orchestration &amp; Model Context Protocol</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-badge" id="sseStatusBadge">
+        <span class="status-dot disconnected"></span>
+        <span class="status-label">SSE Offline</span>
+      </div>
+      <div class="session-info">
+        <span class="label">Session:</span>
+        <span class="value" id="activeSessionId">sess_init</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Container -->
+  <main class="app-container">
+    <!-- Left Sidebar: Goal Input & Presets -->
+    <aside class="sidebar-panel">
+      <section class="card control-card">
+        <h2 class="card-title">Orchestration Control</h2>
+        <p class="card-desc">Enter an architectural challenge or goal for the Planner, Executor, and Critic agents.</p>
+        
+        <div class="input-group">
+          <label for="goalInput">Agent Goal / Prompt</label>
+          <textarea id="goalInput" rows="4" placeholder="e.g. Calculate the monthly token cost for 1,000,000 prompt tokens and 50,000 completion tokens under Gemini-1.5-Pro pricing, and explain RAG cosine similarity advantages."></textarea>
+        </div>
+
+        <div class="preset-group">
+          <span class="preset-label">Architectural Presets:</span>
+          <div class="preset-tags">
+            <button class="preset-btn" data-preset="cost">💰 Token Cost &amp; Pricing</button>
+            <button class="preset-btn" data-preset="rag">📐 Vector RAG &amp; Cosine</button>
+            <button class="preset-btn" data-preset="mcp">🔌 MCP Standards &amp; Tools</button>
+            <button class="preset-btn" data-preset="system">💻 System Host Metrics</button>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button id="runBtn" class="btn btn-primary">
+            <span class="btn-icon">▶</span> Run Workflow
+          </button>
+          <button id="resetBtn" class="btn btn-secondary">Clear</button>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs for Deep-Dive Views -->
+      <section class="card tabs-card">
+        <div class="tab-headers">
+          <button class="tab-btn active" data-tab="toolsTab">MCP Tools</button>
+          <button class="tab-btn" data-tab="ragTab">Vector RAG</button>
+          <button class="tab-btn" data-tab="interviewTab">AI Arch Q&amp;A</button>
+        </div>
+
+        <!-- MCP Tools Tab -->
+        <div class="tab-content active" id="toolsTab">
+          <div class="tab-header-row">
+            <h3>Registered MCP Catalog</h3>
+            <span class="badge" id="mcpCountBadge">0</span>
+          </div>
+          <div id="mcpToolsList" class="compact-list"></div>
+        </div>
+
+        <!-- Vector RAG Tab -->
+        <div class="tab-content" id="ragTab">
+          <div class="tab-header-row">
+            <h3>Vector Knowledge Base</h3>
+            <span class="badge" id="ragCountBadge">0</span>
+          </div>
+          <div class="rag-add-box">
+            <input type="text" id="ragDocTitle" placeholder="Document Title..." />
+            <textarea id="ragDocContent" rows="2" placeholder="Index custom architecture document..."></textarea>
+            <button id="addDocBtn" class="btn btn-sm btn-outline">+ Index Vector Document</button>
+          </div>
+          <div id="ragDocsList" class="compact-list"></div>
+        </div>
+
+        <!-- Interview Q&A Tab -->
+        <div class="tab-content" id="interviewTab">
+          <div class="tab-header-row">
+            <h3>AI Solution Architect Masterclass</h3>
+          </div>
+          <p class="tab-subtext">Principal-level interview questions and architectural rationales.</p>
+          <div id="interviewQuestionsList" class="qa-accordion"></div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Center/Right: Visual Workflow Canvas & Live Telemetry -->
+    <div class="workspace-panel">
+      <!-- Agent Topology Pipeline Canvas -->
+      <section class="topology-canvas card">
+        <div class="node-track">
+          <div class="agent-node" id="nodePlanner">
+            <div class="node-icon">📋</div>
+            <div class="node-meta">
+              <h4>Planner Node</h4>
+              <span class="node-status" id="plannerStatus">Idle</span>
+            </div>
+          </div>
+          <div class="node-arrow">➔</div>
+          <div class="agent-node" id="nodeExecutor">
+            <div class="node-icon">⚙️</div>
+            <div class="node-meta">
+              <h4>Executor Node</h4>
+              <span class="node-status" id="executorStatus">Idle</span>
+            </div>
+          </div>
+          <div class="node-arrow">➔</div>
+          <div class="agent-node" id="nodeCritic">
+            <div class="node-icon">⚖️</div>
+            <div class="node-meta">
+              <h4>Critic Node</h4>
+              <span class="node-status" id="criticStatus">Idle</span>
+            </div>
+          </div>
+          <div class="node-arrow">➔</div>
+          <div class="agent-node" id="nodeSynthesis">
+            <div class="node-icon">✨</div>
+            <div class="node-meta">
+              <h4>Synthesizer</h4>
+              <span class="node-status" id="synthesisStatus">Idle</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Token Cost & Telemetry Ribbon -->
+      <section class="telemetry-ribbon">
+        <div class="telemetry-metric">
+          <span class="metric-title">Prompt Tokens</span>
+          <span class="metric-val" id="metricPromptTokens">0</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-title">Completion Tokens</span>
+          <span class="metric-val" id="metricCompletionTokens">0</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-title">Total Tokens</span>
+          <span class="metric-val" id="metricTotalTokens">0</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-title">Cache Hits</span>
+          <span class="metric-val" id="metricCacheHits">0</span>
+        </div>
+        <div class="telemetry-metric highlight-cost">
+          <span class="metric-title">Est. Cost (USD)</span>
+          <span class="metric-val" id="metricCost">$0.000000</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-title">Latency</span>
+          <span class="metric-val" id="metricLatency">0 ms</span>
+        </div>
+      </section>
+
+      <!-- Active Plan DAG View -->
+      <section class="card plan-card" id="planSection" style="display: none;">
+        <div class="plan-header">
+          <h3>Generated Execution Plan (DAG)</h3>
+          <span class="complexity-badge" id="planComplexity">Complexity: Low</span>
+        </div>
+        <p class="plan-rationale" id="planRationale"></p>
+        <div class="plan-steps-grid" id="planStepsContainer"></div>
+      </section>
+
+      <!-- Trace Stream & Final Answer Grid -->
+      <div class="execution-grid">
+        <!-- Live ReAct Trace Inspector -->
+        <section class="card trace-card">
+          <div class="trace-header">
+            <h3>Live ReAct Execution Trace</h3>
+            <span class="trace-counter" id="traceCount">0 events</span>
+          </div>
+          <div class="trace-stream" id="traceContainer">
+            <div class="empty-state">
+              <span class="empty-icon">⏳</span>
+              <p>Ready. Enter a goal and run the multi-agent workflow to observe real-time thoughts, MCP actions, observations, and telemetry.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Final Synthesis & Critic Review -->
+        <section class="card result-card">
+          <div class="result-header">
+            <h3>Verified Output &amp; Synthesis</h3>
+            <div class="critic-badge-container">
+              <span class="badge badge-score" id="criticScoreBadge">Score: --</span>
+              <span class="badge badge-risk" id="criticRiskBadge">Risk: --</span>
+            </div>
+          </div>
+          <div class="result-body" id="finalResultContainer">
+            <div class="empty-state">
+              <span class="empty-icon">🎯</span>
+              <p>Final verified output, mathematical calculations, and Critic evaluation will render here.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Zero-Build Native ES6 Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

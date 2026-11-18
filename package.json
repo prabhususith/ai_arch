@@ -1,0 +1,39 @@
+{
+  "name": "agentflow-studio",
+  "version": "1.0.0",
+  "description": "AgentFlow Studio: Multi-Agent ReAct Orchestration, MCP Tool Registry, In-Memory Vector RAG, and Real-time SSE Telemetry",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsx test/verify.ts",
+    "generate:pdf": "tsx scripts/generate-pdf.ts"
+  },
+  "keywords": [
+    "ai-agent",
+    "react-orchestration",
+    "mcp",
+    "vector-rag",
+    "cosine-similarity",
+    "sse",
+    "telemetry",
+    "solution-architect"
+  ],
+  "author": "Principal AI-Native Solution Architect",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "pdfkit": "^0.20.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "@types/pdfkit": "^0.17.7",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
